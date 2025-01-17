@@ -1,8 +1,9 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react'
+import { HandPlatter, Inbox, LayoutList, LogOutIcon } from 'lucide-react'
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -14,9 +15,9 @@ import {
 // Menu items.
 const items = [
   {
-    title: 'Home',
-    url: '#',
-    icon: Home,
+    title: 'Precios de Servicios',
+    url: '/services-prices',
+    icon: HandPlatter,
   },
   {
     title: 'Inbox',
@@ -24,19 +25,9 @@ const items = [
     icon: Inbox,
   },
   {
-    title: 'Calendar',
+    title: 'Registros de Reparaciones',
     url: '#',
-    icon: Calendar,
-  },
-  {
-    title: 'Search',
-    url: '#',
-    icon: Search,
-  },
-  {
-    title: 'Settings',
-    url: '#',
-    icon: Settings,
+    icon: LayoutList,
   },
 ]
 
@@ -45,7 +36,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Servicios</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -61,6 +52,18 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <a href='#'>
+                  <LogOutIcon />
+                  <span>Cerrar Sesion</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
       </SidebarContent>
     </Sidebar>
   )
