@@ -1,9 +1,5 @@
-import { ModeToggle } from '@/components/mode-toogle'
+'use client'
 
 export default function Home() {
-  return (
-    <div className='font-[family-name:var(--font-geist-sans)]'>
-      <ModeToggle />
-    </div>
-  )
+  return <div></div>
 }
