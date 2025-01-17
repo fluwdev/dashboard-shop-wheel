@@ -9,3 +9,37 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model PricesServicesWheel {
+  id            Int      @id @default(autoincrement())
+  measure       String
+  repair        Float
+  change        Float
+  rotation      Float
+  disassembly   Float
+  assembly      Float
+  vulcanization Float
+  fineValve     Float
+  thickValve    Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model RubberGutsRepair {
+  id                 Int      @id @default(autoincrement())
+  description        String
+  vulcanizationN     Float
+  vulcanizationG     Float
+  vulcanizationValve Float
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model PaymentsRepairs {
+  id         Int      @id @default(autoincrement())
+  services   String
+  price      Float
+  status     Boolean
+  clientName String
+  createdAt  DateTime @default(now())
+}
