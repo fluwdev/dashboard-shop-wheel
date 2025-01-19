@@ -1,3 +1,5 @@
+'use client'
+
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,11 +11,24 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useForm } from '@/hooks/use-form'
+import { useAuth } from '@/provider/auth-provider'
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
+  const { handleChange, handleReset, values } = useForm({
+    email: '',
+    password: '',
+  })
+  const { login } = useAuth()
+
+  const handleSubmit = () => {
+    login(values.email, values.password)
+    handleReset()
+  }
+
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -31,6 +46,8 @@ export function LoginForm({
                 <Input
                   id='email'
                   type='email'
+                  value={values.email}
+                  onChange={handleChange('email')}
                   placeholder='m@example.com'
                   required
                 />
@@ -39,9 +56,15 @@ export function LoginForm({
                 <div className='flex items-center'>
                   <Label htmlFor='password'>Contraseña</Label>
                 </div>
-                <Input id='password' type='password' required />
+                <Input
+                  id='password'
+                  value={values.password}
+                  onChange={handleChange('password')}
+                  type='password'
+                  required
+                />
               </div>
-              <Button type='submit' className='w-full'>
+              <Button onClick={handleSubmit} type='submit' className='w-full'>
                 Login
               </Button>
             </div>
