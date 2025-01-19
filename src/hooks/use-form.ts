@@ -4,8 +4,12 @@ export function useForm<T>(initialValues: T) {
   const [values, setValues] = useState(initialValues)
 
   const handleChange =
-    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValues((prevValues) => ({ ...prevValues, [key]: e.target.value }))
+    (key: string) => (e: React.ChangeEvent<HTMLInputElement> | string) => {
+      if (typeof e === 'string') {
+        setValues((prevValues) => ({ ...prevValues, [key]: e }))
+      } else {
+        setValues((prevValues) => ({ ...prevValues, [key]: e.target.value }))
+      }
     }
 
   const handleReset = () => {
