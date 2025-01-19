@@ -1,4 +1,7 @@
 // This type is used to define the shape of our data.
+
+import { access } from 'fs'
+
 // You can use a Zod schema here if you want.
 export type PricesServices = {
   id: string
@@ -69,5 +72,25 @@ export const columnsRubberRepair = [
   {
     accessorKey: 'vulcanizationValve',
     header: 'Vulcanización Valvula $',
+  },
+]
+
+export const columnsPaymentsServices = [
+  {
+    accessorKey: 'services',
+    header: 'Servicio',
+  },
+  {
+    accessorKey: 'price',
+    header: 'Precio',
+  },
+  {
+    accessorKey: 'status',
+    header: 'Estado',
+    options: ['Pendiente', 'Pagado'],
+  },
+  {
+    accessorKey: 'clientName',
+    header: 'Cliente',
   },
 ]
