@@ -1,5 +1,6 @@
 'use client'
 
+import Container from '@/components/container'
 import { SheetCreateServices } from '@/components/sheet-create-services'
 import { DataTable } from '@/components/ui/data-table'
 import { useForm } from '@/hooks/use-form'
@@ -8,6 +9,7 @@ import { columnsRubberRepair } from '@/lib/columns'
 import { getRubberRepair, saveRubberRepair } from '@/services/rubber-services'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
+import { RotateLoader } from 'react-spinners'
 
 const initialValues = {
   description: '',
@@ -53,14 +55,21 @@ export default function RubberRepairPage() {
   }
 
   return (
-    <div className='w-[90%] mx-auto h-full'>
+    <Container>
       <SheetCreateServices
         columns={columnsRubberRepair}
         title='Reparaciones de Tripas'
         onSubmit={handleSubmit}
         handleChange={handleChange}
       />
+      <div className='w-full flex justify-center items-center'>
+        <RotateLoader
+          className='mt-10'
+          loading={query.isFetching}
+          color='#fff'
+        />
+      </div>
       <DataTable columns={columnsRubberRepair} data={query.data} />
-    </div>
+    </Container>
   )
 }

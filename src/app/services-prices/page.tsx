@@ -21,6 +21,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { PlusCircle } from 'lucide-react'
 import { RotateLoader } from 'react-spinners'
+import { SheetCreateServices } from '@/components/sheet-create-services'
 
 export default function ServicesPricesPage() {
   const { toast } = useToast()
@@ -64,46 +65,18 @@ export default function ServicesPricesPage() {
     },
   })
 
+  const handleSubmit = () => {
+    mutation.mutate({ ...values })
+  }
+
   return (
     <div className='w-[90%] mx-auto h-full'>
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button className='fixed bottom-8 right-8 z-50 rounded-full w-10 h-10'>
-            <PlusCircle className='h-10 w-10' />
-          </Button>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Agregar nuevo Servicio</SheetTitle>
-          </SheetHeader>
-          <div className='grid gap-4 py-4'>
-            {columnsPricesServices.map((column) => (
-              <div
-                key={column.accessorKey}
-                className='grid grid-cols-4 items-center gap-4'
-              >
-                <Label className='text-right'>
-                  {column.header.replace('$', '')}
-                </Label>
-                <Input
-                  onChange={handleChange(column.accessorKey)}
-                  id={column.accessorKey}
-                  className='col-span-3'
-                />
-              </div>
-            ))}
-          </div>
-          <SheetFooter className='justify-center'>
-            <Button
-              onClick={() => {
-                mutation.mutate({ ...values })
-              }}
-            >
-              Guardar
-            </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+      <SheetCreateServices
+        columns={columnsPricesServices}
+        title='Agregar nuevo Servicio'
+        onSubmit={handleSubmit}
+        handleChange={handleChange}
+      />
       <div className='w-full flex justify-center items-center'>
         <RotateLoader
           className='mt-10'
