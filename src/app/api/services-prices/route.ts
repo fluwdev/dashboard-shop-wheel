@@ -43,3 +43,36 @@ export async function POST(req: Request) {
   })
   return Response.json({ result })
 }
+
+export async function DELETE(request: Request) {
+  const body = await request.json()
+  const result = await prisma.pricesServicesWheel.delete({
+    where: {
+      id: body.id,
+    },
+  })
+
+  if (!result) {
+    throw new Error('No se encontró el servicio')
+  }
+
+  return Response.json({ result })
+}
+
+export async function PUT(request: Request) {
+  const body = await request.json()
+  const result = await prisma.pricesServicesWheel.update({
+    where: {
+      id: body.id,
+    },
+    data: {
+      ...body,
+    },
+  })
+
+  if (!result) {
+    throw new Error('No se encontró el servicio')
+  }
+
+  return Response.json({ result })
+}
