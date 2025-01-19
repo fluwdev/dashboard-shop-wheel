@@ -1,3 +1,5 @@
+'use client'
+
 import { HandPlatter, Inbox, LayoutList, LogOutIcon } from 'lucide-react'
 
 import {
@@ -11,6 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import { useAuth } from '@/provider/auth-provider'
+import { Button } from './ui/button'
 
 // Menu items.
 const items = [
@@ -32,6 +36,12 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const { isAuthenticated, logout } = useAuth()
+
+  if (!isAuthenticated) {
+    return <></>
+  }
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -56,10 +66,10 @@ export function AppSidebar() {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <a href='#'>
+                <Button onClick={logout}>
                   <LogOutIcon />
                   <span>Cerrar Sesion</span>
-                </a>
+                </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
