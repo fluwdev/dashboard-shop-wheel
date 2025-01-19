@@ -26,7 +26,7 @@ const items = [
   },
   {
     title: 'Registros de Reparaciones',
-    url: '#',
+    url: '/payments-services',
     icon: LayoutList,
   },
 ]
