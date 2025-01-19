@@ -1,3 +1,0 @@
-- Hacer la Auhtentication
-- Poder eliminar datos y actualizar los datos
-- Filtrar las ventas por fecha
