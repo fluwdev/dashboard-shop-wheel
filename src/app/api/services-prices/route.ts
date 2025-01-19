@@ -1,17 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import * as zod from 'zod'
-
-const shema = zod.object({
-  measure: zod.string(),
-  repair: zod.number(),
-  change: zod.number(),
-  rotation: zod.number(),
-  disassembly: zod.number(),
-  assembly: zod.number(),
-  vulcanization: zod.number(),
-  fineValve: zod.number(),
-  thickValve: zod.number(),
-})
+import { schemaPricesServices } from '@/schema/schema-prices-services'
 
 export async function GET() {
   // Searchs to all prices of services
@@ -27,17 +15,31 @@ export async function POST(req: Request) {
   // Converts the request to JSON
   const body = await req.json()
 
-  // Validates the request
-  const validationData = shema.parse(body)
-  if (!validationData) {
-    return Response.json({ error: 'Datos invalidos' }, { status: 400 })
+  // Parser the values of the request
+  const valuesParsed = {
+    measure: body.measure,
+    repair: parseFloat(body.repair),
+    change: parseFloat(body.change),
+    rotation: parseFloat(body.rotation),
+    disassembly: parseFloat(body.disassembly),
+    assembly: parseFloat(body.assembly),
+    vulcanization: parseFloat(body.vulcanization),
+    fineValve: parseFloat(body.fineValve),
+    thickValve: parseFloat(body.thickValve),
   }
 
-  // Creates a new price of service
+  // Validates the request
+  try {
+    schemaPricesServices.parse(valuesParsed)
+  } catch {
+    throw new Error('Datos Invalidos')
+  }
+
+  //Creates a new price of service
   const result = await prisma.pricesServicesWheel.create({
     data: {
-      ...body,
+      ...valuesParsed,
     },
   })
-  return Response.json({ ...result })
+  return Response.json({ result })
 }
