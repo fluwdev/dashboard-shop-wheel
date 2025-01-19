@@ -12,6 +12,10 @@ export function useForm<T>(initialValues: T) {
       }
     }
 
+  const handleChangeAllValues = (values: T) => {
+    setValues(values)
+  }
+
   const handleReset = () => {
     setValues(initialValues)
   }
@@ -20,5 +24,6 @@ export function useForm<T>(initialValues: T) {
     values,
     handleChange,
     handleReset,
+    handleChangeAllValues,
   }
 }
