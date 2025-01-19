@@ -5,27 +5,56 @@ import { DailyPaymentsChart } from '@/components/payments/daily-payments-chart'
 import { PaymentStatusChart } from '@/components/payments/payments-status-char'
 import { RevenueChart } from '@/components/payments/revenue-chart'
 import { SheetCreateServices } from '@/components/sheet-create-services'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { useForm } from '@/hooks/use-form'
 import { useToast } from '@/hooks/use-toast'
 import { columnsPaymentsServices } from '@/lib/columns'
 import { mappingPaymentsServices } from '@/lib/mapping'
 import {
+  deletePaymentsServices,
   getPaymentsServices,
   savePaymentsServices,
+  updatePaymentsServices,
 } from '@/services/payments-services'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button } from 'react-day-picker'
+import { useState } from 'react'
 import { RotateLoader } from 'react-spinners'
 
+const initialValues = {
+  services: '',
+  price: 0,
+  status: false,
+  clientName: '',
+}
+
 export default function PaymentsServicesPage() {
-  const { handleChange, handleReset, values } = useForm({
-    services: '',
-    price: 0,
-    status: false,
-    clientName: '',
-  })
+  const { handleChange, handleReset, values } = useForm(initialValues)
+  const {
+    values: valuesUpdate,
+    handleChange: handleChangeUpdate,
+    handleReset: handleResetUpdate,
+    handleChangeAllValues,
+  } = useForm(initialValues)
   const queryClient = useQueryClient()
   const { data, isFetching } = useQuery({
     initialData: [],
@@ -33,6 +62,7 @@ export default function PaymentsServicesPage() {
     queryFn: getPaymentsServices,
   })
   const { toast } = useToast()
+  const [isOpenUpdate, setIsOpenUpdate] = useState(false)
 
   const mutation = useMutation({
     mutationKey: ['createPaymentsServices'],
@@ -53,8 +83,62 @@ export default function PaymentsServicesPage() {
     },
   })
 
+  const mutationUpdate = useMutation({
+    mutationFn: updatePaymentsServices,
+    mutationKey: ['updateServicesPrices'],
+    onSuccess: () => {
+      toast({
+        title: 'Servicio actualizado',
+        description: 'El servicio se actualizó correctamente',
+      })
+      queryClient.invalidateQueries({
+        type: 'active',
+        queryKey: ['getPaymentsServices'],
+      })
+      handleResetUpdate()
+      setIsOpenUpdate(false)
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar el servicio',
+      })
+    },
+  })
+
+  const mutationDelete = useMutation({
+    mutationFn: deletePaymentsServices,
+    mutationKey: ['deleteServicesPrices'],
+    onSuccess: () => {
+      toast({
+        title: 'Servicio eliminado',
+        description: 'El servicio se eliminó correctamente',
+      })
+      queryClient.invalidateQueries({
+        type: 'active',
+        queryKey: ['getPaymentsServices'],
+      })
+      handleResetUpdate()
+      setIsOpenUpdate(false)
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'No se pudo eliminar el servicio',
+      })
+    },
+  })
+
   const handleSubmit = () => {
     mutation.mutate({ ...values })
+  }
+
+  const handleSubmitUpdate = () => {
+    mutationUpdate.mutate({ id: valuesUpdate.id, ...valuesUpdate })
+  }
+
+  const handleSubmitDelete = () => {
+    mutationDelete.mutate({ id: valuesUpdate.id })
   }
 
   return (
@@ -65,13 +149,79 @@ export default function PaymentsServicesPage() {
         handleChange={handleChange}
         onSubmit={handleSubmit}
       />
+      <Sheet
+        open={isOpenUpdate}
+        onOpenChange={(value) => {
+          setIsOpenUpdate(value)
+        }}
+      >
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Editar Servicio</SheetTitle>
+          </SheetHeader>
+          <div className='grid gap-4 py-4'>
+            {columnsPaymentsServices.map((column) => (
+              <div
+                key={column.accessorKey}
+                className='grid grid-cols-4 items-center gap-4'
+              >
+                <Label className='text-right'>
+                  {column.header.replace('$', '')}
+                </Label>
+                {column?.options ? (
+                  <Select
+                    value={valuesUpdate[column.accessorKey]}
+                    onValueChange={(value) => {
+                      handleChangeUpdate(column.accessorKey)(value)
+                    }}
+                  >
+                    <SelectTrigger className='w-[180px]'>
+                      <SelectValue placeholder='Seleccione un estado' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Estado de Servicio</SelectLabel>
+                        {column.options.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    value={valuesUpdate[column.accessorKey]}
+                    onChange={handleChangeUpdate(column.accessorKey)}
+                    id={column.accessorKey}
+                    className='col-span-3'
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+          <SheetFooter>
+            <Button onClick={handleSubmitUpdate}>Actualizar</Button>
+            <Button variant={'outline'} onClick={handleSubmitDelete}>
+              Eliminar
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
       <div className='w-full flex justify-center items-center'>
         <RotateLoader className='mt-10' loading={isFetching} color='#fff' />
       </div>
-      <DataTable
-        data={mappingPaymentsServices(data)}
-        columns={columnsPaymentsServices}
-      />
+      {!isFetching && (
+        <DataTable
+          onClickRow={(data) => {
+            setIsOpenUpdate(true)
+            handleChangeAllValues(data)
+          }}
+          data={mappingPaymentsServices(data)}
+          columns={columnsPaymentsServices}
+        />
+      )}
+
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-10'>
         <Card>
           <CardHeader>
