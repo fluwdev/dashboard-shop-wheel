@@ -15,11 +15,11 @@ export async function savePaymentsServices<T>(values: T) {
   return jsonData
 }
 
-export async function deletePaymentsServices(id: string) {
+export async function deletePaymentsServices(data) {
   const response = await fetch('/api/payments', {
     method: 'DELETE',
     body: JSON.stringify({
-      id,
+      id: data.id,
     }),
   })
   const jsonData = await response.json()
