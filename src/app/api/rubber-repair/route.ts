@@ -44,13 +44,27 @@ export async function DELETE(req: Request) {
 
 export async function PUT(req: Request) {
   const body = await req.json()
+
+  // Parser the values of the request
+  const valuesParsed = {
+    description: body.description,
+    vulcanizationN: parseFloat(body.vulcanizationN),
+    vulcanizationG: parseFloat(body.vulcanizationG),
+    vulcanizationValve: parseFloat(body.vulcanizationValve),
+  }
+
   const result = await prisma.rubberGutsRepair.update({
     where: {
       id: body.id,
     },
     data: {
-      ...body,
+      ...valuesParsed,
     },
   })
+
+  if (!result) {
+    throw new Error('No se encontró el servicio')
+  }
+
   return Response.json({ result })
 }

@@ -53,12 +53,28 @@ export async function DELETE(req: Request) {
 
 export async function PUT(req: Request) {
   const body = await req.json()
+
+  // Parser the values of the request
+  const valuesParsed = {
+    services: body.services,
+    price: parseFloat(body.price),
+    status: body.status === 'Pendiente' ? false : true,
+    clientName: body.clientName,
+  }
+
+  // Validates the request
+  try {
+    schemaPaymentsServices.parse(valuesParsed)
+  } catch {
+    throw new Error('Datos Invalidos')
+  }
+
   const result = await prisma.paymentsRepairs.update({
     where: {
       id: body.id,
     },
     data: {
-      ...body,
+      ...valuesParsed,
     },
   })
 

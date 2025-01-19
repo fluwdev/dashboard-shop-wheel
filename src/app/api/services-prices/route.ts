@@ -46,6 +46,7 @@ export async function POST(req: Request) {
 
 export async function DELETE(request: Request) {
   const body = await request.json()
+
   const result = await prisma.pricesServicesWheel.delete({
     where: {
       id: body.id,
