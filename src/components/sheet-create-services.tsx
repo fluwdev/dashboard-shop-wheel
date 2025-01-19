@@ -10,13 +10,22 @@ import {
 } from './ui/sheet'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
 
 type SheetCreateServicesProps = {
   title: string
   onSubmit: () => void
   handleChange: (
     key: string
-  ) => (event: React.ChangeEvent<HTMLInputElement>) => void
+  ) => (event: React.ChangeEvent<HTMLInputElement> | string) => void
   columns: Array<{ accessorKey: string; header: string }>
 }
 
@@ -46,11 +55,33 @@ export function SheetCreateServices({
               <Label className='text-right'>
                 {column.header.replace('$', '')}
               </Label>
-              <Input
-                onChange={handleChange(column.accessorKey)}
-                id={column.accessorKey}
-                className='col-span-3'
-              />
+              {column?.options ? (
+                <Select
+                  onValueChange={(value) => {
+                    handleChange(column.accessorKey)(value)
+                  }}
+                >
+                  <SelectTrigger className='w-[180px]'>
+                    <SelectValue placeholder='Seleccione un estado' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Estado de Servicio</SelectLabel>
+                      {column.options.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  onChange={handleChange(column.accessorKey)}
+                  id={column.accessorKey}
+                  className='col-span-3'
+                />
+              )}
             </div>
           ))}
         </div>
