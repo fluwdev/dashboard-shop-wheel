@@ -20,8 +20,8 @@ const items = [
     icon: HandPlatter,
   },
   {
-    title: 'Inbox',
-    url: '#',
+    title: 'Reparaciones de Tripas',
+    url: '/rubber-repair',
     icon: Inbox,
   },
   {
