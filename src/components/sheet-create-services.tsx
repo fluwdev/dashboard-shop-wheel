@@ -26,7 +26,7 @@ type SheetCreateServicesProps = {
   handleChange: (
     key: string
   ) => (event: React.ChangeEvent<HTMLInputElement> | string) => void
-  columns: Array<{ accessorKey: string; header: string }>
+  columns: Array<{ accessorKey: string; header: string; options?: string[] }>
 }
 
 export function SheetCreateServices({
