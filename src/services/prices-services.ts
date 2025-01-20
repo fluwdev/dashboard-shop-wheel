@@ -1,10 +1,12 @@
+import { ServicePriceData } from '@/types'
+
 export async function getPricesServices() {
   const response = await fetch('/api/services-prices')
   const jsonData = await response.json()
   return jsonData.data
 }
 
-export async function savePricesServices<T>(values: T) {
+export async function savePricesServices(values: ServicePriceData) {
   const response = await fetch('/api/services-prices', {
     method: 'POST',
     body: JSON.stringify({
@@ -15,7 +17,7 @@ export async function savePricesServices<T>(values: T) {
   return jsonData
 }
 
-export async function deletePricesServices(data: string) {
+export async function deletePricesServices(data: { id: string }) {
   const response = await fetch(`/api/services-prices`, {
     method: 'DELETE',
     body: JSON.stringify({
@@ -26,7 +28,7 @@ export async function deletePricesServices(data: string) {
   return jsonData
 }
 
-export async function updatePricesServices<T>(values: T) {
+export async function updatePricesServices(values: ServicePriceData) {
   const response = await fetch(`/api/services-prices`, {
     method: 'PUT',
     body: JSON.stringify({
