@@ -1,10 +1,12 @@
+import { RubberRepairData } from '@/types'
+
 export async function getRubberRepair() {
   const response = await fetch('/api/rubber-repair')
   const jsonData = await response.json()
   return jsonData.data
 }
 
-export async function saveRubberRepair(values: Record<string, string>) {
+export async function saveRubberRepair(values: RubberRepairData) {
   const response = await fetch('/api/rubber-repair', {
     method: 'POST',
     body: JSON.stringify({ ...values }),
@@ -13,7 +15,7 @@ export async function saveRubberRepair(values: Record<string, string>) {
   return jsonData
 }
 
-export async function deleteRubberRepair(data: string) {
+export async function deleteRubberRepair(data: { id: string }) {
   const response = await fetch(`/api/rubber-repair`, {
     method: 'DELETE',
     body: JSON.stringify({
@@ -24,7 +26,7 @@ export async function deleteRubberRepair(data: string) {
   return jsonData
 }
 
-export async function updateRubberRepair(values: Record<string, string>) {
+export async function updateRubberRepair(values: RubberRepairData) {
   const response = await fetch(`/api/rubber-repair`, {
     method: 'PUT',
     body: JSON.stringify({
