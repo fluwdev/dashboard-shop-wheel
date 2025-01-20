@@ -1,10 +1,12 @@
+import { PaymentData } from '@/types'
+
 export async function getPaymentsServices() {
   const response = await fetch('/api/payments')
   const jsonData = await response.json()
   return jsonData.data
 }
 
-export async function savePaymentsServices<T>(values: T) {
+export async function savePaymentsServices(values: PaymentData) {
   const response = await fetch('/api/payments', {
     method: 'POST',
     body: JSON.stringify({
@@ -15,7 +17,7 @@ export async function savePaymentsServices<T>(values: T) {
   return jsonData
 }
 
-export async function deletePaymentsServices(data) {
+export async function deletePaymentsServices(data: { id: string }) {
   const response = await fetch('/api/payments', {
     method: 'DELETE',
     body: JSON.stringify({
@@ -26,7 +28,7 @@ export async function deletePaymentsServices(data) {
   return jsonData
 }
 
-export async function updatePaymentsServices<T>(values: T) {
+export async function updatePaymentsServices(values: PaymentData) {
   const response = await fetch('/api/payments', {
     method: 'PUT',
     body: JSON.stringify({
