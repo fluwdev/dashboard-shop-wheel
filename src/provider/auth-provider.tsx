@@ -39,7 +39,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const token = localStorage.getItem('token')
     if (token) {
       setIsAuthenticated(true)
-      setUser(JSON.parse(localStorage.getItem('user')))
+      const user = localStorage.getItem('user')
+      if (user) {
+        setUser(JSON.parse(user))
+      }
     }
   }, [])
 
