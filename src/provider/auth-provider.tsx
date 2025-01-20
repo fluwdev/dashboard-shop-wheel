@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
@@ -41,7 +43,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsAuthenticated(true)
       const user = localStorage.getItem('user')
       if (user) {
-        setUser(JSON.parse(user))
+        try {
+          setUser(JSON.parse(user))
+        } catch (error) {
+          console.error('Failed to parse user from localStorage', error)
+          localStorage.removeItem('user')
+        }
       }
     }
   }, [])
