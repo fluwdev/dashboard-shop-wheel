@@ -36,6 +36,7 @@ import {
   savePaymentsServices,
   updatePaymentsServices,
 } from '@/services/payments-services'
+import { PaymentData } from '@/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { RotateLoader } from 'react-spinners'
@@ -48,13 +49,14 @@ const initialValues = {
 }
 
 export default function PaymentsServicesPage() {
-  const { handleChange, handleReset, values } = useForm(initialValues)
+  const { handleChange, handleReset, values } =
+    useForm<PaymentData>(initialValues)
   const {
     values: valuesUpdate,
     handleChange: handleChangeUpdate,
     handleReset: handleResetUpdate,
     handleChangeAllValues,
-  } = useForm(initialValues)
+  } = useForm<PaymentData>(initialValues)
   const queryClient = useQueryClient()
   const { data, isFetching } = useQuery({
     initialData: [],
@@ -138,7 +140,7 @@ export default function PaymentsServicesPage() {
   }
 
   const handleSubmitDelete = () => {
-    mutationDelete.mutate({ id: valuesUpdate.id })
+    mutationDelete.mutate({ id: valuesUpdate.id ?? '' })
   }
 
   return (
@@ -170,9 +172,20 @@ export default function PaymentsServicesPage() {
                 </Label>
                 {column?.options ? (
                   <Select
-                    value={valuesUpdate[column.accessorKey]}
+                    value={
+                      valuesUpdate[column.accessorKey as keyof PaymentData] !==
+                      undefined
+                        ? String(
+                            valuesUpdate[
+                              column.accessorKey as keyof PaymentData
+                            ]
+                          )
+                        : undefined
+                    }
                     onValueChange={(value) => {
-                      handleChangeUpdate(column.accessorKey)(value)
+                      handleChangeUpdate(
+                        column.accessorKey as keyof PaymentData
+                      )(value)
                     }}
                   >
                     <SelectTrigger className='w-[180px]'>
@@ -191,7 +204,16 @@ export default function PaymentsServicesPage() {
                   </Select>
                 ) : (
                   <Input
-                    value={valuesUpdate[column.accessorKey]}
+                    value={
+                      valuesUpdate[column.accessorKey as keyof PaymentData] !==
+                      undefined
+                        ? String(
+                            valuesUpdate[
+                              column.accessorKey as keyof PaymentData
+                            ]
+                          )
+                        : undefined
+                    }
                     onChange={handleChangeUpdate(column.accessorKey)}
                     id={column.accessorKey}
                     className='col-span-3'
@@ -215,7 +237,12 @@ export default function PaymentsServicesPage() {
         <DataTable
           onClickRow={(data) => {
             setIsOpenUpdate(true)
-            handleChangeAllValues(data)
+            handleChangeAllValues({
+              clientName: data.clientName,
+              price: parseFloat(data.price),
+              services: data.services,
+              status: data.status === 'Pendiente' ? false : true,
+            })
           }}
           data={mappingPaymentsServices(data)}
           columns={columnsPaymentsServices}

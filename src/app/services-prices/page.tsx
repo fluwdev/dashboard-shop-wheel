@@ -23,6 +23,8 @@ import { RotateLoader } from 'react-spinners'
 import { SheetCreateServices } from '@/components/sheet-create-services'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { ServicePriceData } from '@/types'
+import { mappingPricesServices } from '@/lib/mapping'
 
 const initialValues = {
   measure: '',
@@ -45,13 +47,14 @@ export default function ServicesPricesPage() {
     queryFn: getPricesServices,
     initialData: [],
   })
-  const { values, handleChange, handleReset } = useForm(initialValues)
+  const { values, handleChange, handleReset } =
+    useForm<ServicePriceData>(initialValues)
   const {
     values: valuesUpdate,
     handleChange: handleChangeUpdate,
     handleReset: handleResetUpdate,
     handleChangeAllValues,
-  } = useForm(initialValues)
+  } = useForm<ServicePriceData>(initialValues)
 
   const mutationDelete = useMutation({
     mutationFn: deletePricesServices,
@@ -126,7 +129,7 @@ export default function ServicesPricesPage() {
   }
 
   const handleSubmitDelete = () => {
-    mutationDelete.mutate({ id: valuesUpdate.id })
+    mutationDelete.mutate({ id: valuesUpdate.id ?? '' })
   }
 
   const handleSubmitUpdate = () => {
@@ -161,7 +164,17 @@ export default function ServicesPricesPage() {
                   {column.header.replace('$', '')}
                 </Label>
                 <Input
-                  value={valuesUpdate[column.accessorKey]}
+                  value={
+                    valuesUpdate[
+                      column.accessorKey as keyof ServicePriceData
+                    ] !== undefined
+                      ? String(
+                          valuesUpdate[
+                            column.accessorKey as keyof ServicePriceData
+                          ]
+                        )
+                      : undefined
+                  }
                   onChange={handleChangeUpdate(column.accessorKey)}
                   id={column.accessorKey}
                   className='col-span-3'
@@ -188,10 +201,21 @@ export default function ServicesPricesPage() {
         <DataTable
           onClickRow={(data) => {
             setIsOpenUpdate(true)
-            handleChangeAllValues(data)
+            handleChangeAllValues({
+              id: data.id,
+              measure: data.measure,
+              repair: parseFloat(data.repair),
+              change: parseFloat(data.change),
+              rotation: parseFloat(data.rotation),
+              disassembly: parseFloat(data.disassembly),
+              assembly: parseFloat(data.assembly),
+              vulcanization: parseFloat(data.vulcanization),
+              fineValve: parseFloat(data.fineValve),
+              thickValve: parseFloat(data.thickValve),
+            })
           }}
           columns={columnsPricesServices}
-          data={query.data}
+          data={mappingPricesServices(query.data)}
         />
       )}
     </div>

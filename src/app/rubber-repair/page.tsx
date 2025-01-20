@@ -16,12 +16,14 @@ import {
 import { useForm } from '@/hooks/use-form'
 import { useToast } from '@/hooks/use-toast'
 import { columnsRubberRepair } from '@/lib/columns'
+import { mappingRubberRepair } from '@/lib/mapping'
 import {
   deleteRubberRepair,
   getRubberRepair,
   saveRubberRepair,
   updateRubberRepair,
 } from '@/services/rubber-services'
+import { RubberRepairData } from '@/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { useState } from 'react'
 import { RotateLoader } from 'react-spinners'
@@ -44,7 +46,7 @@ export default function RubberRepairPage() {
     handleChange: handleChangeUpdate,
     handleReset: handleResetUpdate,
     handleChangeAllValues,
-  } = useForm(initialValues)
+  } = useForm<RubberRepairData>(initialValues)
   const query = useQuery({
     queryKey: ['getRubberRepair'],
     queryFn: getRubberRepair,
@@ -124,7 +126,7 @@ export default function RubberRepairPage() {
   }
 
   const handleSubmitDelete = () => {
-    mutationDelete.mutate({ id: valuesUpdate.id })
+    mutationDelete.mutate({ id: valuesUpdate.id ?? '' })
   }
 
   const handleSubmitUpdate = () => {
@@ -159,7 +161,17 @@ export default function RubberRepairPage() {
                   {column.header.replace('$', '')}
                 </Label>
                 <Input
-                  value={valuesUpdate[column.accessorKey]}
+                  value={
+                    valuesUpdate[
+                      column.accessorKey as keyof RubberRepairData
+                    ] !== undefined
+                      ? String(
+                          valuesUpdate[
+                            column.accessorKey as keyof RubberRepairData
+                          ]
+                        )
+                      : undefined
+                  }
                   onChange={handleChangeUpdate(column.accessorKey)}
                   id={column.accessorKey}
                   className='col-span-3'
@@ -186,10 +198,16 @@ export default function RubberRepairPage() {
         <DataTable
           onClickRow={(data) => {
             setIsOpenUpdate(true)
-            handleChangeAllValues(data)
+            handleChangeAllValues({
+              id: data.id,
+              description: data.description,
+              vulcanizationN: parseFloat(data.vulcanizationN),
+              vulcanizationG: parseFloat(data.vulcanizationG),
+              vulcanizationValve: parseFloat(data.vulcanizationValve),
+            })
           }}
           columns={columnsRubberRepair}
-          data={query.data}
+          data={mappingRubberRepair(query.data)}
         />
       )}
     </Container>
