@@ -31,6 +31,9 @@ export function LoginForm({
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
+      <div className='w-full flex items-center justify-center'>
+        <img src='./logo.jpg' className='h-20 w-auto rounded-full' />
+      </div>
       <Card>
         <CardHeader>
           <CardTitle className='text-2xl'>Login</CardTitle>

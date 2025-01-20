@@ -9,12 +9,14 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { useAuth } from '@/provider/auth-provider'
 import { Button } from './ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 // Menu items.
 const items = [
@@ -44,6 +46,12 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
+      <SidebarHeader className='flex flex-row items-center mt-4'>
+        <Avatar>
+          <AvatarImage src='./logo.jpg' />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Servicios</SidebarGroupLabel>
