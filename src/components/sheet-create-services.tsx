@@ -47,43 +47,46 @@ export function SheetCreateServices({
           <SheetTitle>{title}</SheetTitle>
         </SheetHeader>
         <div className='grid gap-4 py-4'>
-          {columns.map((column) => (
-            <div
-              key={column.accessorKey}
-              className='grid grid-cols-4 items-center gap-4'
-            >
-              <Label className='text-right'>
-                {column.header.replace('$', '')}
-              </Label>
-              {column?.options ? (
-                <Select
-                  onValueChange={(value) => {
-                    handleChange(column.accessorKey)(value)
-                  }}
+          {columns.map(
+            (column) =>
+              column.accessorKey !== 'date' && (
+                <div
+                  key={column.accessorKey}
+                  className='grid grid-cols-4 items-center gap-4'
                 >
-                  <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder='Seleccione un estado' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Estado de Servicio</SelectLabel>
-                      {column.options.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              ) : (
-                <Input
-                  onChange={handleChange(column.accessorKey)}
-                  id={column.accessorKey}
-                  className='col-span-3'
-                />
-              )}
-            </div>
-          ))}
+                  <Label className='text-right'>
+                    {column.header.replace('$', '')}
+                  </Label>
+                  {column?.options ? (
+                    <Select
+                      onValueChange={(value) => {
+                        handleChange(column.accessorKey)(value)
+                      }}
+                    >
+                      <SelectTrigger className='w-[180px]'>
+                        <SelectValue placeholder='Seleccione un estado' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Estado de Servicio</SelectLabel>
+                          {column.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      onChange={handleChange(column.accessorKey)}
+                      id={column.accessorKey}
+                      className='col-span-3'
+                    />
+                  )}
+                </div>
+              )
+          )}
         </div>
         <SheetFooter className='justify-center'>
           <Button onClick={handleSubmit}>Guardar</Button>

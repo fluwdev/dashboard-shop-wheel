@@ -162,65 +162,71 @@ export default function PaymentsServicesPage() {
             <SheetTitle>Editar Servicio</SheetTitle>
           </SheetHeader>
           <div className='grid gap-4 py-4'>
-            {columnsPaymentsServices.map((column) => (
-              <div
-                key={column.accessorKey}
-                className='grid grid-cols-4 items-center gap-4'
-              >
-                <Label className='text-right'>
-                  {column.header.replace('$', '')}
-                </Label>
-                {column?.options ? (
-                  <Select
-                    value={
-                      valuesUpdate[column.accessorKey as keyof PaymentData] !==
-                      undefined
-                        ? String(
-                            valuesUpdate[
-                              column.accessorKey as keyof PaymentData
-                            ]
-                          )
-                        : undefined
-                    }
-                    onValueChange={(value) => {
-                      handleChangeUpdate(
-                        column.accessorKey as keyof PaymentData
-                      )(value)
-                    }}
-                  >
-                    <SelectTrigger className='w-[180px]'>
-                      <SelectValue placeholder='Seleccione un estado' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Estado de Servicio</SelectLabel>
-                        {column.options.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <Input
-                    value={
-                      valuesUpdate[column.accessorKey as keyof PaymentData] !==
-                      undefined
-                        ? String(
-                            valuesUpdate[
-                              column.accessorKey as keyof PaymentData
-                            ]
-                          )
-                        : undefined
-                    }
-                    onChange={handleChangeUpdate(column.accessorKey)}
-                    id={column.accessorKey}
-                    className='col-span-3'
-                  />
-                )}
-              </div>
-            ))}
+            {columnsPaymentsServices.map((column) =>
+              column.accessorKey === 'date' ? (
+                <></>
+              ) : (
+                <div
+                  key={column.accessorKey}
+                  className='grid grid-cols-4 items-center gap-4'
+                >
+                  <Label className='text-right'>
+                    {column.header.replace('$', '')}
+                  </Label>
+                  {column?.options ? (
+                    <Select
+                      value={
+                        valuesUpdate[
+                          column.accessorKey as keyof PaymentData
+                        ] !== undefined
+                          ? String(
+                              valuesUpdate[
+                                column.accessorKey as keyof PaymentData
+                              ]
+                            )
+                          : undefined
+                      }
+                      onValueChange={(value) => {
+                        handleChangeUpdate(
+                          column.accessorKey as keyof PaymentData
+                        )(value)
+                      }}
+                    >
+                      <SelectTrigger className='w-[180px]'>
+                        <SelectValue placeholder='Seleccione un estado' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Estado de Servicio</SelectLabel>
+                          {column.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      value={
+                        valuesUpdate[
+                          column.accessorKey as keyof PaymentData
+                        ] !== undefined
+                          ? String(
+                              valuesUpdate[
+                                column.accessorKey as keyof PaymentData
+                              ]
+                            )
+                          : undefined
+                      }
+                      onChange={handleChangeUpdate(column.accessorKey)}
+                      id={column.accessorKey}
+                      className='col-span-3'
+                    />
+                  )}
+                </div>
+              )
+            )}
           </div>
           <SheetFooter>
             <Button onClick={handleSubmitUpdate}>Actualizar</Button>
