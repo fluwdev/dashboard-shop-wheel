@@ -238,6 +238,7 @@ export default function PaymentsServicesPage() {
           onClickRow={(data) => {
             setIsOpenUpdate(true)
             handleChangeAllValues({
+              id: data.id,
               clientName: data.clientName,
               price: parseFloat(data.price),
               services: data.services,
