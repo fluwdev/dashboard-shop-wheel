@@ -8,7 +8,7 @@ export const mappingPaymentsServices = (
       price: item.price,
       status: item.status ? 'Pagado' : 'Pendiente',
       clientName: item.clientName,
-      date: item.createdAt,
+      date: new Date(item.createdAt).toLocaleDateString(),
     }
   })
 }
